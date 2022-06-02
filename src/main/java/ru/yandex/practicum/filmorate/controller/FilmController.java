@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.utils.FilmValidator;
 import ru.yandex.practicum.filmorate.utils.IdFactory;
@@ -17,7 +18,7 @@ public class FilmController {
     private final TreeSet<Long> filmIdSet = new TreeSet<>();
 
     @PostMapping
-    public Film create(@RequestBody Film film) {
+    public Film create(@RequestBody Film film) throws ValidationException {
         FilmValidator.validateFilm(film);
         FilmValidator.validateFilmCreation(films, film);
         IdFactory.setIdForFilm(filmIdSet,film);
@@ -27,7 +28,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film update(@RequestBody Film film) {
+    public Film update(@RequestBody Film film) throws ValidationException {
         FilmValidator.validateFilm(film);
         FilmValidator.validateFilmUpdate(films,film);
         films.put(film.getId(),film);

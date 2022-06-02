@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.utils.IdFactory;
 import ru.yandex.practicum.filmorate.utils.UserValidator;
@@ -17,7 +18,7 @@ public class UserController {
     private final TreeSet<Long> userIdSet = new TreeSet<>();
 
     @PostMapping
-    public User create(@RequestBody User user) {
+    public User create(@RequestBody User user) throws ValidationException {
         UserValidator.validateUser(user);
         UserValidator.validateUserCreation(users,user);
         IdFactory.setIdForUser(userIdSet,user);
@@ -27,7 +28,7 @@ public class UserController {
     }
 
     @PutMapping
-    public User update(@RequestBody User user) {
+    public User update(@RequestBody User user) throws ValidationException {
         UserValidator.validateUser(user);
         UserValidator.validateUserUpdate(users, user);
         users.put(user.getId(),user);

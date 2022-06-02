@@ -45,7 +45,7 @@ class UserValidatorTest {
     }
 
     @Test
-    void testWhenUserNameIsBlankChangedToLogin() {
+    void testWhenUserNameIsBlankChangedToLogin() throws ValidationException {
         User user = new User("login", "email@mail.ru", LocalDate.of(2004,1,1));
         user.setName("");
         UserValidator.validateUser(user);
@@ -53,7 +53,7 @@ class UserValidatorTest {
     }
 
     @Test
-    void testWhenUserNameIsNullChangedToLogin() {
+    void testWhenUserNameIsNullChangedToLogin() throws ValidationException {
         User user = new User("login", "email@mail.ru", LocalDate.of(2004,1,1));
         UserValidator.validateUser(user);
         assertEquals("login", user.getName());

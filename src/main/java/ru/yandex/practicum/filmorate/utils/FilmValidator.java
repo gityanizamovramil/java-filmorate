@@ -7,16 +7,17 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Map;
-import java.util.TreeSet;
+
+import org.apache.commons.lang3.StringUtils;
 
 @Slf4j
 public class FilmValidator {
-    public static void validateFilm(Film film) {
-        if (film.getName().isBlank()) {
+    public static void validateFilm(Film film) throws ValidationException {
+        if (StringUtils.isBlank(film.getName())) {
             log.error("Film has incorrect name: {}", film);
             throw new ValidationException("Name of the film must be indicated");
         }
-        if (film.getDescription().length() > 200) {
+        if (StringUtils.defaultString(film.getDescription()).length() > 200) {
             log.error("Film has incorrect length of description: {}", film);
             throw new ValidationException("Description of the film must be less or equal than 200 chars");
         }
@@ -30,14 +31,14 @@ public class FilmValidator {
         }
     }
 
-    public static void validateFilmCreation(Map<Long, Film> films, Film film) {
+    public static void validateFilmCreation(Map<Long, Film> films, Film film) throws ValidationException {
         if (films.containsKey(film.getId())) {
             log.error("Film has been created before: {}", film);
             throw new ValidationException("Film is already created");
         }
     }
 
-    public static void validateFilmUpdate(Map<Long, Film> films, Film film) {
+    public static void validateFilmUpdate(Map<Long, Film> films, Film film) throws ValidationException {
         if (!films.containsKey(film.getId())) {
             log.error("Film has not been created yet: {}", film);
             throw new ValidationException("Film must be created firstly");

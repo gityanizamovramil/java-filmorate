@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserControllerTest {
 
     @Test
-    void create() {
+    void create() throws ValidationException {
         User user1 = new User("login","email@mail.com", LocalDate.of(2004,1,1));
         User user2 = new User("login","email@mail.com", LocalDate.of(2004,1,1));
         user2.setId(1L);
@@ -26,7 +27,7 @@ class UserControllerTest {
     }
 
     @Test
-    void update() {
+    void update() throws ValidationException {
         UserController userController = new UserController();
         User user1 = new User("login","email@mail.com", LocalDate.of(2004,1,1));
         userController.create(user1);
@@ -42,7 +43,7 @@ class UserControllerTest {
     }
 
     @Test
-    void findAll() {
+    void findAll() throws ValidationException {
         UserController userController = new UserController();
         List<User> users = userController.findAll();
         assertEquals(0,users.size());

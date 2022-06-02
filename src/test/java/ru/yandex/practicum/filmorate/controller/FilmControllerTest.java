@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FilmControllerTest {
 
     @Test
-    void create() {
+    void create() throws ValidationException {
         Film film1 = new Film("name1","description1", LocalDate.of(2022,6,1),60);
         Film film2 = new Film("name1","description1", LocalDate.of(2022,6,1),60);
         film2.setId(1L);
@@ -26,7 +27,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void update() {
+    void update() throws ValidationException {
         FilmController filmController = new FilmController();
         Film film1 = new Film("name1","description1", LocalDate.of(2022,6,1),60);
         filmController.create(film1);
@@ -41,7 +42,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void findAll() {
+    void findAll() throws ValidationException {
         FilmController filmController = new FilmController();
         List<Film> films = filmController.findAll();
         assertEquals(0,films.size());
