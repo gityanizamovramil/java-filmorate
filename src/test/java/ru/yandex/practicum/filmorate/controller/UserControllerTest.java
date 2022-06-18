@@ -1,8 +1,11 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +20,7 @@ class UserControllerTest {
         User user2 = new User("login","email@mail.com", LocalDate.of(2004,1,1));
         user2.setId(1L);
         user2.setName("login");
-        UserController userController = new UserController();
+        UserController userController = new UserController(new UserService(new InMemoryUserStorage()));
         User user3 = userController.create(user1);
         assertEquals(user2.getId(),user3.getId());
         assertEquals(user2.getName(),user3.getName());
@@ -27,8 +30,8 @@ class UserControllerTest {
     }
 
     @Test
-    void update() throws ValidationException {
-        UserController userController = new UserController();
+    void update() throws ValidationException, DataNotFoundException {
+        UserController userController = new UserController(new UserService(new InMemoryUserStorage()));
         User user1 = new User("login","email@mail.com", LocalDate.of(2004,1,1));
         userController.create(user1);
         User user2 = new User("newLogin","newEmail@mail.com", LocalDate.of(2004,4,4));
@@ -44,7 +47,7 @@ class UserControllerTest {
 
     @Test
     void findAll() throws ValidationException {
-        UserController userController = new UserController();
+        UserController userController = new UserController(new UserService(new InMemoryUserStorage()));
         List<User> users = userController.findAll();
         assertEquals(0,users.size());
         User user1 = new User("login","email@mail.com", LocalDate.of(2004,1,1));

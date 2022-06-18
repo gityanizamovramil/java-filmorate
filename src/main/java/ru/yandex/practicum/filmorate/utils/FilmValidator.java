@@ -1,12 +1,13 @@
 package ru.yandex.practicum.filmorate.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Map;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -31,17 +32,30 @@ public class FilmValidator {
         }
     }
 
-    public static void validateFilmCreation(Map<Long, Film> films, Film film) throws ValidationException {
-        if (films.containsKey(film.getId())) {
-            log.error("Film has been created before: {}", film);
-            throw new ValidationException("Film is already created");
+    public static void validateCreation(List<Long> filmIdList, Film film) throws ValidationException {
+        if (film.getId() != null) {
+            if (filmIdList.contains(film.getId())) {
+                log.error("Film has been created before: {}", film);
+                throw new ValidationException("Film is already created");
+            }
         }
     }
 
-    public static void validateFilmUpdate(Map<Long, Film> films, Film film) throws ValidationException {
-        if (!films.containsKey(film.getId())) {
+    public static void validateUpdate(List<Long> filmIdList, Film film)
+            throws ValidationException, DataNotFoundException {
+        if (film.getId() == null) {
             log.error("Film has not been created yet: {}", film);
             throw new ValidationException("Film must be created firstly");
+        }
+        if (!filmIdList.contains(film.getId())) {
+            log.error("Film has not been created yet: {}", film);
+            throw new DataNotFoundException("Film must be created firstly");
+        }
+    }
+
+    public static void validateExist(List<Long> filmIdList, Long id) throws DataNotFoundException {
+        if(!filmIdList.contains(id)) {
+            throw new DataNotFoundException(String.format("Film with %s is not found", id));
         }
     }
 }

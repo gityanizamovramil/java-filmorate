@@ -5,8 +5,9 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
-import java.time.Month;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -63,11 +64,11 @@ class FilmValidatorTest {
     void testValidationExceptionFilmIsCreatedBefore() {
         Film film = new Film("name", "description", LocalDate.of(2022, 6, 1), 60);
         film.setId(1L);
-        Map<Long,Film> films = new HashMap<>();
-        films.put(film.getId(),film);
+        List<Long> films = new ArrayList<>();
+        films.add(film.getId());
         ValidationException exception = assertThrows(
                 ValidationException.class,
-                () -> FilmValidator.validateFilmCreation(films,film)
+                () -> FilmValidator.validateCreation(films,film)
         );
         assertEquals("Film is already created", exception.getMessage());
     }
@@ -75,10 +76,10 @@ class FilmValidatorTest {
     void testValidationExceptionFilmIsNotCreatedBefore() {
         Film film = new Film("name", "description", LocalDate.of(2022, 6, 1), 60);
         film.setId(1L);
-        Map<Long,Film> films = new HashMap<>();
+        List<Long> films = new ArrayList<>();
         ValidationException exception = assertThrows(
                 ValidationException.class,
-                () -> FilmValidator.validateFilmUpdate(films,film)
+                () -> FilmValidator.validateUpdate(films,film)
         );
         assertEquals("Film must be created firstly", exception.getMessage());
     }

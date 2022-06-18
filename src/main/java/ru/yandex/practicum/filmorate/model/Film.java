@@ -5,6 +5,8 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Getter
 @Setter
@@ -15,6 +17,7 @@ public class Film {
     private String description;
     private LocalDate releaseDate;
     private Integer duration;
+    private Set<Long> likes = new TreeSet<>();
 
     public Film(String name, String description, LocalDate releaseDate, Integer duration) {
         this.name = name;

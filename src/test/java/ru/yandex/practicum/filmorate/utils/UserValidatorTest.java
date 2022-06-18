@@ -5,7 +5,9 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -72,10 +74,10 @@ class UserValidatorTest {
         User user = new User("login", "email@mail.ru", LocalDate.of(2004,1,1));
         user.setName("name");
         user.setId(1L);
-        Map<Long, User> users = new HashMap<>();
-        users.put(1L, user);
+        List<Long> users = new ArrayList<>();
+        users.add(1L);
         ValidationException exception = assertThrows(ValidationException.class,
-                ()-> UserValidator.validateUserCreation(users, user));
+                ()-> UserValidator.validateCreation(users, user));
         assertEquals("User is already created", exception.getMessage());
     }
 
@@ -84,9 +86,9 @@ class UserValidatorTest {
         User user = new User("login", "email@mail.ru", LocalDate.of(2004,1,1));
         user.setName("name");
         user.setId(1L);
-        Map<Long, User> users = new HashMap<>();
+        List<Long> users = new ArrayList<>();
         ValidationException exception = assertThrows(ValidationException.class,
-                ()-> UserValidator.validateUserUpdate(users, user));
+                ()-> UserValidator.validateUpdate(users, user));
         assertEquals("User must be created firstly", exception.getMessage());
     }
 

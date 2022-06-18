@@ -5,6 +5,8 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Getter
 @Setter
@@ -15,6 +17,7 @@ public class User {
     private String name;
     private String email;
     private LocalDate birthday;
+    private Set<Long> friends = new TreeSet<>();
 
     public User(String login, String email, LocalDate birthday) {
         this.login = login;

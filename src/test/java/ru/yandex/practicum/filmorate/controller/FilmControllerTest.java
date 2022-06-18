@@ -1,8 +1,11 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,7 +20,7 @@ class FilmControllerTest {
         Film film1 = new Film("name1","description1", LocalDate.of(2022,6,1),60);
         Film film2 = new Film("name1","description1", LocalDate.of(2022,6,1),60);
         film2.setId(1L);
-        FilmController filmController = new FilmController();
+        FilmController filmController = new FilmController(new FilmService(new InMemoryFilmStorage()));
         Film film3 = filmController.create(film1);
         assertEquals(film2.getId(), film3.getId());
         assertEquals(film2.getName(), film3.getName());
@@ -27,8 +30,8 @@ class FilmControllerTest {
     }
 
     @Test
-    void update() throws ValidationException {
-        FilmController filmController = new FilmController();
+    void update() throws ValidationException, DataNotFoundException {
+        FilmController filmController = new FilmController(new FilmService(new InMemoryFilmStorage()));
         Film film1 = new Film("name1","description1", LocalDate.of(2022,6,1),60);
         filmController.create(film1);
         Film film2 = new Film("name2","description2", LocalDate.of(2022,6,2),120);
@@ -43,7 +46,7 @@ class FilmControllerTest {
 
     @Test
     void findAll() throws ValidationException {
-        FilmController filmController = new FilmController();
+        FilmController filmController = new FilmController(new FilmService(new InMemoryFilmStorage()));
         List<Film> films = filmController.findAll();
         assertEquals(0,films.size());
         Film film1 = new Film("name1","description1", LocalDate.of(2022,6,1),60);

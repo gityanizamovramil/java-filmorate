@@ -1,45 +1,80 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.utils.IdFactory;
+import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.utils.UserValidator;
 
 import java.util.*;
 
 @RestController
 @Slf4j
-@RequestMapping("/users")
+@RequestMapping
 public class UserController {
 
-    private final Map<Long, User> users = new HashMap<>();
-    private final TreeSet<Long> userIdSet = new TreeSet<>();
+    private final UserService userService;
 
-    @PostMapping
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostMapping("/users")
     public User create(@RequestBody User user) throws ValidationException {
         UserValidator.validateUser(user);
-        UserValidator.validateUserCreation(users,user);
-        IdFactory.setIdForUser(userIdSet,user);
-        users.put(user.getId(), user);
+        userService.create(user);
         log.info("User is created: {}", user);
-        return users.get(user.getId());
+        return user;
     }
 
-    @PutMapping
-    public User update(@RequestBody User user) throws ValidationException {
+    @PutMapping("/users")
+    public User update(@RequestBody User user) throws ValidationException, DataNotFoundException {
         UserValidator.validateUser(user);
-        UserValidator.validateUserUpdate(users, user);
-        users.put(user.getId(),user);
+        userService.update(user);
         log.info("User is updated: {}", user);
-        return users.get(user.getId());
+        return user;
     }
 
-    @GetMapping
+    @GetMapping("/users")
     public List<User> findAll() {
-        log.info("Users are returned: {}", users.values());
-        return new ArrayList<>(users.values());
+        log.info("Users are returned: {}", userService.findAll());
+        return userService.findAll();
     }
+
+    @GetMapping("/users/{id}")
+    public User getById(@PathVariable(name = "id") Long id) throws DataNotFoundException {
+        return userService.getById(id);
+    }
+
+
+    @PutMapping("/users/{id}/friends/{friendId}")
+    public User addFriend(@PathVariable(name = "id") Long id, @PathVariable(name = "friendId") Long friendId)
+            throws DataNotFoundException {
+        return userService.addFriend(id, friendId);
+    }
+
+
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    public User deleteFriend(@PathVariable(name = "id") Long id, @PathVariable(name = "friendId") Long friendId)
+            throws DataNotFoundException {
+        return userService.deleteFriend(id, friendId);
+    }
+
+    @GetMapping("/users/{id}/friends")
+    public List<User> getFriends(@PathVariable(name = "id") Long id) throws DataNotFoundException {
+        return userService.getFriends(id);
+    }
+
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public List<User> getCommonFriends(
+            @PathVariable(name = "id") Long id,
+            @PathVariable(name = "otherId") Long otherId) throws DataNotFoundException {
+        return userService.getCommonFriends(id, otherId);
+    }
+
 
 }
