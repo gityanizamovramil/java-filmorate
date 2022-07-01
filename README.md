@@ -1,7 +1,7 @@
 # java-filmorate
 Template repository for Filmorate project.
 
-![Database schema located in repository by below address:](./src/main/resources/QuickDBD-Filmorate.png)
+![Database schema located in repository by below address:](./src/main/resources/QuickDBD-Filmorate(1).png)
 
 Database schema located online by below address: https://app.quickdatabasediagrams.com/#/d/FSVLBY
 
