@@ -1,7 +1,7 @@
 # java-filmorate
 Template repository for Filmorate project.
 
-![Database schema located in repository by below address:](./src/main/resources/QuickDBD-Filmorate(2).png)
+![Database schema located in repository by below address:](./src/main/resources/QuickDBD-Filmorate(3).png)
 
 Database schema located online by below address: https://app.quickdatabasediagrams.com/#/d/FSVLBY
 
@@ -14,7 +14,6 @@ _____
 - name varchar
 - email varchar
 - birthday date
-
 
 2 - users_friends -- SELECT * FROM users_friends
 -----
@@ -41,7 +40,7 @@ _____
 - description varchar
 - release_date date
 - duration int
-- rating varchar FK >- ratings.rating_id
+- rating int FK >- ratings.rating_id
 
 6 - ratings -- SELECT * FROM ratings
 -----
