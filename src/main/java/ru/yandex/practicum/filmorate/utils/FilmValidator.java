@@ -30,6 +30,10 @@ public class FilmValidator {
             log.error("Film has negative duration: {}", film);
             throw new ValidationException("Duration of the film must be positive");
         }
+        if (film.getMpa() == null || film.getMpa().getId() == null) {
+            log.error("Film has incorrect MPA: {}", film);
+            throw new ValidationException("MPA of the film must be indicated");
+        }
     }
 
     public static void validateCreation(List<Long> filmIdList, Film film) throws ValidationException {
@@ -54,8 +58,40 @@ public class FilmValidator {
     }
 
     public static void validateExist(List<Long> filmIdList, Long id) throws DataNotFoundException {
-        if(!filmIdList.contains(id)) {
+        if (!filmIdList.contains(id)) {
             throw new DataNotFoundException(String.format("Film with %s is not found", id));
         }
+    }
+
+    public static void validateMPA(List<Integer> mpaIdList, Integer id) throws ValidationException {
+        if (!mpaIdList.contains(id)) {
+            throw new ValidationException(String.format("MPA with %s is not found", id));
+        }
+    }
+
+    public static void validateExistMPA(List<Integer> mpaIdList, Integer id) throws DataNotFoundException {
+        if (!mpaIdList.contains(id)) {
+            throw new DataNotFoundException(String.format("MPA with %s is not found", id));
+        }
+    }
+
+    public static void validateGenre(List<Integer> genreList, Integer id) throws ValidationException {
+        if(!genreList.contains(id)) {
+            throw new ValidationException(String.format("Genre with %s is not found", id));
+        }
+    }
+
+    public static void validateExistGenre(List<Integer> genreList, Integer id) throws DataNotFoundException {
+        if(!genreList.contains(id)) {
+            throw new DataNotFoundException(String.format("Genre with %s is not found", id));
+        }
+    }
+
+    public static void validateLike(List<Long> userLikes, Long id) throws ValidationException {
+        if (userLikes.contains(id)) {
+            log.error("Film has been liked by user before: {}", userLikes);
+            throw new ValidationException("Film is already liked by user");
+        }
+
     }
 }

@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -12,12 +12,16 @@ import ru.yandex.practicum.filmorate.utils.UserValidator;
 import java.util.*;
 
 @RestController
-@RequiredArgsConstructor
 @Slf4j
 @RequestMapping
 public class UserController {
 
     private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/users")
     public User create(@RequestBody User user) throws ValidationException {
@@ -50,19 +54,19 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}/friends/{friendId}")
-    public User addFriend(@PathVariable(name = "id") Long id, @PathVariable(name = "friendId") Long friendId)
+    public List<Long> addFriend(@PathVariable(name = "id") Long id, @PathVariable(name = "friendId") Long friendId)
             throws DataNotFoundException {
-        User user = userService.addFriend(id, friendId);
-        log.info(String.format("Friend with friendId %s was added to user with id %s: {}", friendId, id), user);
-        return user;
+        List<Long> friends = userService.addFriend(id, friendId);
+        log.info(String.format("Friend with friendId %s was added to user with id %s: {}", friendId, id), friends);
+        return friends;
     }
 
     @DeleteMapping("/users/{id}/friends/{friendId}")
-    public User deleteFriend(@PathVariable(name = "id") Long id, @PathVariable(name = "friendId") Long friendId)
+    public List<Long> deleteFriend(@PathVariable(name = "id") Long id, @PathVariable(name = "friendId") Long friendId)
             throws DataNotFoundException {
-        User user = userService.deleteFriend(id, friendId);
-        log.info(String.format("Friend with friendId %s was deleted from user with id %s: {}", friendId, id), user);
-        return user;
+        List<Long> friends = userService.deleteFriend(id, friendId);
+        log.info(String.format("Friend with friendId %s was deleted from user with id %s: {}", friendId, id), friends);
+        return friends;
     }
 
     @GetMapping("/users/{id}/friends")

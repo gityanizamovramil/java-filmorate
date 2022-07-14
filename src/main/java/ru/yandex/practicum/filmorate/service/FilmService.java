@@ -1,17 +1,19 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.MPA;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.utils.FilmValidator;
 import ru.yandex.practicum.filmorate.utils.UserValidator;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,11 +22,27 @@ public class FilmService {
     private final FilmStorage filmStorage;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage) {
+    public FilmService(@Qualifier("FilmDBStorage") FilmStorage filmStorage) {
         this.filmStorage = filmStorage;
     }
 
-    public Film create(Film film) throws ValidationException {
+    public List<Genre> findAllGenres() {
+        return filmStorage.getGenreList();
+    }
+
+    public Genre findGenreById(Integer id) throws DataNotFoundException {
+        return filmStorage.getGenreById(id);
+    }
+
+    public List<MPA> findAllRatings() {
+        return filmStorage.getMpaList();
+    }
+
+    public MPA findRatingById(Integer id) throws DataNotFoundException {
+        return filmStorage.getMpaByid(id);
+    }
+
+    public Film create(Film film) throws ValidationException, DataNotFoundException {
         filmStorage.create(film);
         return film;
     }
@@ -38,29 +56,29 @@ public class FilmService {
         return filmStorage.getFilmList();
     }
 
-    public Film addLike(Long id, Long userId) throws DataNotFoundException {
+    public List<Long> addLike(Long id, Long userId) throws DataNotFoundException, ValidationException {
         Film film = filmStorage.getById(id);
-        Set<Long> likes = film.getLikes();
-        likes.add(userId);
-        return film;
+        filmStorage.addLike(film.getId(), userId);
+        return filmStorage.getFilmLikes(film.getId());
     }
 
-    public Film deleteLike(Long id, Long userId) throws DataNotFoundException {
+    public List<Long> deleteLike(Long id, Long userId) throws DataNotFoundException {
         Film film = filmStorage.getById(id);
-        Set<Long> likes = film.getLikes();
-        UserValidator.validateExist(new ArrayList<>(likes),userId);
-        likes.remove(userId);
-        return film;
+        filmStorage.deleteLike(film.getId(), userId);
+        return filmStorage.getFilmLikes(film.getId());
     }
 
     public List<Film> getPopular(Integer count) {
         List<Film> popular = filmStorage.getFilmList();
-        if(popular.size() <=1 ) {
+        if (popular.size() <= 1) {
             return popular;
         } else {
             return popular.stream()
                     .sorted((film1, film2) -> {
-                        int result = Integer.compare(film1.getLikes().size(), film2.getLikes().size());
+                        int result =
+                                Integer.compare(
+                                        filmStorage.getFilmLikes(film1.getId()).size()
+                                        , filmStorage.getFilmLikes(film2.getId()).size());
                         result = -1 * result;
                         return result;
                     })

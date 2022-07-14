@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.utils;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.MPA;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ class FilmValidatorTest {
     @Test
     void testValidationExceptionFilmNameIsIncorrect() {
         String incorrectName = "";
-        Film film = new Film(incorrectName, "description", LocalDate.of(2022, 6, 1), 60);
+        Film film = new Film(incorrectName, "description", LocalDate.of(2022, 6, 1), 60, new MPA(1, "G"));
         ValidationException exception = assertThrows(
                 ValidationException.class,
                 () -> FilmValidator.validateFilm(film)
@@ -32,7 +34,7 @@ class FilmValidatorTest {
             sb.append("a");
         }
         String tooLongDescription = sb.toString();
-        Film film = new Film("name", tooLongDescription, LocalDate.of(2022, 6, 1), 60);
+        Film film = new Film("name", tooLongDescription, LocalDate.of(2022, 6, 1), 60, new MPA(1, "G"));
         ValidationException exception = assertThrows(
                 ValidationException.class,
                 () -> FilmValidator.validateFilm(film)
@@ -42,7 +44,7 @@ class FilmValidatorTest {
 
     @Test
     void testValidationExceptionFilmReleaseDateIsEarlier() {
-        Film film = new Film("name", "description", LocalDate.of(1895, 12, 27), 60);
+        Film film = new Film("name", "description", LocalDate.of(1895, 12, 27), 60, new MPA(1, "G"));
         ValidationException exception = assertThrows(
                 ValidationException.class,
                 () -> FilmValidator.validateFilm(film)
@@ -52,7 +54,7 @@ class FilmValidatorTest {
 
     @Test
     void testValidationExceptionFilmDurationIsNotPositive() {
-        Film film = new Film("name", "description", LocalDate.of(2022, 6, 1), -60);
+        Film film = new Film("name", "description", LocalDate.of(2022, 6, 1), -60, new MPA(1, "G"));
         ValidationException exception = assertThrows(
                 ValidationException.class,
                 () -> FilmValidator.validateFilm(film)
@@ -62,7 +64,7 @@ class FilmValidatorTest {
 
     @Test
     void testValidationExceptionFilmIsCreatedBefore() {
-        Film film = new Film("name", "description", LocalDate.of(2022, 6, 1), 60);
+        Film film = new Film("name", "description", LocalDate.of(2022, 6, 1), 60, new MPA(1, "G"));
         film.setId(1L);
         List<Long> films = new ArrayList<>();
         films.add(film.getId());
@@ -74,11 +76,11 @@ class FilmValidatorTest {
     }
     @Test
     void testValidationExceptionFilmIsNotCreatedBefore() {
-        Film film = new Film("name", "description", LocalDate.of(2022, 6, 1), 60);
+        Film film = new Film("name", "description", LocalDate.of(2022, 6, 1), 60, new MPA(1, "G"));
         film.setId(1L);
         List<Long> films = new ArrayList<>();
-        ValidationException exception = assertThrows(
-                ValidationException.class,
+        DataNotFoundException exception = assertThrows(
+                DataNotFoundException.class,
                 () -> FilmValidator.validateUpdate(films,film)
         );
         assertEquals("Film must be created firstly", exception.getMessage());

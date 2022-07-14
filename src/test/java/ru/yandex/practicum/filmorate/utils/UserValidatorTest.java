@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.utils;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -87,7 +88,7 @@ class UserValidatorTest {
         user.setName("name");
         user.setId(1L);
         List<Long> users = new ArrayList<>();
-        ValidationException exception = assertThrows(ValidationException.class,
+        DataNotFoundException exception = assertThrows(DataNotFoundException.class,
                 ()-> UserValidator.validateUpdate(users, user));
         assertEquals("User must be created firstly", exception.getMessage());
     }

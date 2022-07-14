@@ -1,26 +1,60 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.MPA;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.utils.FilmValidator;
 
 import java.util.*;
 
 @RestController
-@RequiredArgsConstructor
 @Slf4j
 @RequestMapping
 public class FilmController {
 
     private final FilmService filmService;
 
+    @Autowired
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
+    }
+
+    @GetMapping("/genres")
+    public List<Genre> findAllGenres() {
+        List<Genre> genres = filmService.findAllGenres();
+        log.info("Genres are returned: {}", genres);
+        return genres;
+    }
+
+    @GetMapping("/genres/{id}")
+    public Genre findGenreById(@PathVariable(name="id") Integer id) throws DataNotFoundException {
+        Genre genre = filmService.findGenreById(id);
+        log.info(String.format("Genre with id %s is returned: {}", id), genre);
+        return genre;
+    }
+
+    @GetMapping("/mpa")
+    public List<MPA> findAllRatings() {
+        List<MPA> ratings = filmService.findAllRatings();
+        log.info("Ratings are returned: {}", ratings);
+        return ratings;
+    }
+
+    @GetMapping("/mpa/{id}")
+    public MPA findRatingById(@PathVariable(name="id") Integer id) throws DataNotFoundException {
+        MPA mpa = filmService.findRatingById(id);
+        log.info(String.format("MPA with id %s is returned: {}", id), mpa);
+        return mpa;
+    }
+
     @PostMapping("/films")
-    public Film create(@RequestBody Film film) throws ValidationException {
+    public Film create(@RequestBody Film film) throws ValidationException, DataNotFoundException {
         FilmValidator.validateFilm(film);
         filmService.create(film);
         log.info("Film is created: {}", film);
@@ -50,19 +84,19 @@ public class FilmController {
     }
 
     @PutMapping("/films/{id}/like/{userId}")
-    public Film addLike(@PathVariable(name = "id") Long id, @PathVariable(name = "userId") Long userId)
-            throws DataNotFoundException {
-        Film film = filmService.addLike(id, userId);
-        log.info(String.format("User with id %s added like to the film with id %s: {}", userId, id), film);
-        return film;
+    public List<Long> addLike(@PathVariable(name = "id") Long id, @PathVariable(name = "userId") Long userId)
+            throws DataNotFoundException, ValidationException {
+        List<Long> filmLikes = filmService.addLike(id, userId);
+        log.info(String.format("User with id %s added like to the film with id %s: {}", userId, id), filmLikes);
+        return filmLikes;
     }
 
     @DeleteMapping("/films/{id}/like/{userId}")
-    public Film deleteLike(@PathVariable(name = "id") Long id, @PathVariable(name = "userId") Long userId)
+    public List<Long> deleteLike(@PathVariable(name = "id") Long id, @PathVariable(name = "userId") Long userId)
             throws DataNotFoundException {
-        Film film = filmService.deleteLike(id, userId);
-        log.info(String.format("User with id %s deleted like from the film with id %s: {}", userId, id), film);
-        return film;
+        List<Long> filmLikes = filmService.deleteLike(id, userId);
+        log.info(String.format("User with id %s deleted like from the film with id %s: {}", userId, id), filmLikes);
+        return filmLikes;
     }
 
     @GetMapping("/films/popular")

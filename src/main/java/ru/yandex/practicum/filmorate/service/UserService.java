@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -16,7 +17,7 @@ public class UserService {
     private final UserStorage userStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(@Qualifier("UserDBStorage") UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
@@ -34,53 +35,45 @@ public class UserService {
         return userStorage.getById(id);
     }
 
-    public User addFriend(Long id, Long friendId) throws DataNotFoundException {
+    public List<Long> addFriend(Long id, Long friendId) throws DataNotFoundException {
         User userById = userStorage.getById(id);
         User friendById = userStorage.getById(friendId);
-        userStorage.getUserList()
-                .stream()
-                .filter(user -> user.getId().equals(userById.getId()))
-                .forEach(user -> user.getFriends().add(friendById.getId()));
-        userStorage.getUserList()
-                .stream()
-                .filter(user -> user.getId().equals(friendById.getId()))
-                .forEach(user -> user.getFriends().add(userById.getId()));
-        return userById;
+        List<Long> friends = userStorage.getFriends(userById.getId());
+        if(!friends.contains(friendById.getId())) {
+            userStorage.addFriend(userById.getId(),friendById.getId());
+            friends = userStorage.getFriends(userById.getId());
+        }
+        return friends;
     }
 
-    public User deleteFriend(Long id, Long friendId) throws DataNotFoundException {
+    public List<Long> deleteFriend(Long id, Long friendId) throws DataNotFoundException {
         User userById = userStorage.getById(id);
         User friendById = userStorage.getById(friendId);
-        userStorage.getUserList()
-                .stream()
-                .filter(user -> user.getFriends().contains(userById.getId()))
-                .forEach(user -> user.getFriends().remove(friendById.getId()));
-        userStorage.getUserList()
-                .stream()
-                .filter(user -> user.getFriends().contains(friendById.getId()))
-                .forEach(user -> user.getFriends().remove(userById.getId()));
-        return userById;
+        List<Long> friends = userStorage.getFriends(userById.getId());
+        if(friends.contains(friendById.getId())) {
+            userStorage.deleteFriend(userById.getId(),friendById.getId());
+            friends = userStorage.getFriends(userById.getId());
+        }
+        return friends;
     }
 
     public List<User> getFriends(Long id) throws DataNotFoundException {
         User userById = userStorage.getById(id);
+        List<Long> friends = userStorage.getFriends(userById.getId());
         return userStorage.getUserList()
                 .stream()
-                .filter(user -> user.getFriends().contains(id))
+                .filter(user -> friends.contains(user.getId()))
                 .collect(Collectors.toList());
     }
 
     public List<User> getCommonFriends(Long id, Long otherId) throws DataNotFoundException {
         User userById = userStorage.getById(id);
         User otherUserById = userStorage.getById(otherId);
-        List<Long> commonFriends = userStorage.getUserList()
+        List<Long> userFriends = userStorage.getFriends(userById.getId());
+        List<Long> otherUserFriends = userStorage.getFriends(otherUserById.getId());
+        List<Long> commonFriends = userFriends
                 .stream()
-                .filter(user -> user.getId().equals(userById.getId()))
-                .findFirst()
-                .orElseThrow()
-                .getFriends()
-                .stream()
-                .filter(streamId -> otherUserById.getFriends().contains(streamId))
+                .filter(otherUserFriends::contains)
                 .collect(Collectors.toList());
         List<User> userList = userStorage.getUserList();
         return userList.stream()

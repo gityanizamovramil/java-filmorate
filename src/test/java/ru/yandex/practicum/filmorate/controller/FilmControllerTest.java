@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.MPA;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
@@ -16,9 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class FilmControllerTest {
 
     @Test
-    void create() throws ValidationException {
-        Film film1 = new Film("name1","description1", LocalDate.of(2022,6,1),60);
-        Film film2 = new Film("name1","description1", LocalDate.of(2022,6,1),60);
+    void create() throws ValidationException, DataNotFoundException {
+        Film film1 = new Film("name1","description1", LocalDate.of(2022,6,1),60, new MPA(1,"G"));
+        Film film2 = new Film("name1","description1", LocalDate.of(2022,6,1),60, new MPA(1,"G"));
         film2.setId(1L);
         FilmController filmController = new FilmController(new FilmService(new InMemoryFilmStorage()));
         Film film3 = filmController.create(film1);
@@ -32,9 +33,9 @@ class FilmControllerTest {
     @Test
     void update() throws ValidationException, DataNotFoundException {
         FilmController filmController = new FilmController(new FilmService(new InMemoryFilmStorage()));
-        Film film1 = new Film("name1","description1", LocalDate.of(2022,6,1),60);
+        Film film1 = new Film("name1","description1", LocalDate.of(2022,6,1),60, new MPA(1, "G"));
         filmController.create(film1);
-        Film film2 = new Film("name2","description2", LocalDate.of(2022,6,2),120);
+        Film film2 = new Film("name2","description2", LocalDate.of(2022,6,2),120, new MPA(1, "G"));
         film2.setId(1L);
         Film film3 = filmController.update(film2);
         assertEquals(film2.getId(), film3.getId());
@@ -45,11 +46,11 @@ class FilmControllerTest {
     }
 
     @Test
-    void findAll() throws ValidationException {
+    void findAll() throws ValidationException, DataNotFoundException {
         FilmController filmController = new FilmController(new FilmService(new InMemoryFilmStorage()));
         List<Film> films = filmController.findAll();
         assertEquals(0,films.size());
-        Film film1 = new Film("name1","description1", LocalDate.of(2022,6,1),60);
+        Film film1 = new Film("name1","description1", LocalDate.of(2022,6,1),60, new MPA(1, "G"));
         filmController.create(film1);
         films = filmController.findAll();
         assertEquals(1,films.size());

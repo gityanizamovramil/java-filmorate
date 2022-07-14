@@ -16,4 +16,10 @@ public interface UserStorage {
 
     User getById(Long id) throws DataNotFoundException;
 
+    //новые методы
+    List<Long> getFriends(Long id);
+
+    void addFriend(Long id, Long friendId);
+
+    void deleteFriend(Long id, Long friendId);
 }

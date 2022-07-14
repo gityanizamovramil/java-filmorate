@@ -17,10 +17,21 @@ public class User {
     private String name;
     private String email;
     private LocalDate birthday;
-    private Set<Long> friends = new TreeSet<>();
+
+    public User() {
+
+    }
 
     public User(String login, String email, LocalDate birthday) {
         this.login = login;
+        this.email = email;
+        this.birthday = birthday;
+    }
+
+    public User(Long id, String login, String name, String email, LocalDate birthday) {
+        this.id = id;
+        this.login = login;
+        this.name = name;
         this.email = email;
         this.birthday = birthday;
     }

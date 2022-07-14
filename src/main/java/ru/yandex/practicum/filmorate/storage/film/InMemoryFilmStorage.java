@@ -1,9 +1,12 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.MPA;
 import ru.yandex.practicum.filmorate.utils.FilmValidator;
 import ru.yandex.practicum.filmorate.utils.IdFactory;
 
@@ -13,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@Qualifier("InMemoryFilmStorage")
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Long, Film> films = new HashMap<>();
 
@@ -40,6 +44,41 @@ public class InMemoryFilmStorage implements FilmStorage {
         return films.get(id);
     }
 
+    //новые методы
+    @Override
+    public void addLike(Long id, Long userId) {
+
+    }
+
+    @Override
+    public void deleteLike(Long id, Long userId) {
+
+    }
+
+    @Override
+    public List<Long> getFilmLikes(Long id) {
+        return null;
+    }
+
+    @Override
+    public List<Genre> getGenreList() {
+        return null;
+    }
+
+    @Override
+    public Genre getGenreById(Integer id) {
+        return null;
+    }
+
+    @Override
+    public List<MPA> getMpaList() {
+        return null;
+    }
+
+    @Override
+    public MPA getMpaByid(Integer id) {
+        return null;
+    }
 }
 
 
