@@ -31,5 +31,5 @@ public interface FilmStorage {
 
     List<MPA> getMpaList();
 
-    MPA getMpaByid(Integer id) throws DataNotFoundException;
+    MPA getMpaById(Integer id) throws DataNotFoundException;
 }

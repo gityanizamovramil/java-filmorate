@@ -10,6 +10,8 @@ import java.time.Month;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.MPA;
 
 @Slf4j
 public class FilmValidator {
@@ -69,20 +71,20 @@ public class FilmValidator {
         }
     }
 
-    public static void validateExistMPA(List<Integer> mpaIdList, Integer id) throws DataNotFoundException {
-        if (!mpaIdList.contains(id)) {
+    public static void validateExistMPA(List<MPA> mpaIdList, Integer id) throws DataNotFoundException {
+        if (mpaIdList.isEmpty() || mpaIdList.get(0) == null || !mpaIdList.get(0).getId().equals(id)) {
             throw new DataNotFoundException(String.format("MPA with %s is not found", id));
         }
     }
 
     public static void validateGenre(List<Integer> genreList, Integer id) throws ValidationException {
-        if(!genreList.contains(id)) {
+        if (!genreList.contains(id)) {
             throw new ValidationException(String.format("Genre with %s is not found", id));
         }
     }
 
-    public static void validateExistGenre(List<Integer> genreList, Integer id) throws DataNotFoundException {
-        if(!genreList.contains(id)) {
+    public static void validateExistGenre(List<Genre> genreList, Integer id) throws DataNotFoundException {
+        if (genreList.isEmpty() || genreList.get(0) == null || !genreList.get(0).getId().equals(id)) {
             throw new DataNotFoundException(String.format("Genre with %s is not found", id));
         }
     }

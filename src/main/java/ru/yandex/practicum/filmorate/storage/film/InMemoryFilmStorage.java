@@ -76,7 +76,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public MPA getMpaByid(Integer id) {
+    public MPA getMpaById(Integer id) {
         return null;
     }
 }

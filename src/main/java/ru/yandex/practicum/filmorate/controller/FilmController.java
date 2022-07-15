@@ -35,7 +35,7 @@ public class FilmController {
     @GetMapping("/genres/{id}")
     public Genre findGenreById(@PathVariable(name="id") Integer id) throws DataNotFoundException {
         Genre genre = filmService.findGenreById(id);
-        log.info(String.format("Genre with id %s is returned: {}", id), genre);
+        log.info("Genre with id {} is returned: {}", id, genre);
         return genre;
     }
 
@@ -49,7 +49,7 @@ public class FilmController {
     @GetMapping("/mpa/{id}")
     public MPA findRatingById(@PathVariable(name="id") Integer id) throws DataNotFoundException {
         MPA mpa = filmService.findRatingById(id);
-        log.info(String.format("MPA with id %s is returned: {}", id), mpa);
+        log.info("MPA with id {} is returned: {}", id, mpa);
         return mpa;
     }
 
@@ -79,7 +79,7 @@ public class FilmController {
     @GetMapping("/films/{id}")
     public Film getById(@PathVariable(name="id") Long id) throws DataNotFoundException {
         Film film = filmService.getById(id);
-        log.info(String.format("Film with id %s is returned: {}", id), film);
+        log.info("Film with id {} is returned: {}", id, film);
         return film;
     }
 
@@ -87,7 +87,7 @@ public class FilmController {
     public List<Long> addLike(@PathVariable(name = "id") Long id, @PathVariable(name = "userId") Long userId)
             throws DataNotFoundException, ValidationException {
         List<Long> filmLikes = filmService.addLike(id, userId);
-        log.info(String.format("User with id %s added like to the film with id %s: {}", userId, id), filmLikes);
+        log.info("User with id {} added like to the film with id {}: {}", userId, id, filmLikes);
         return filmLikes;
     }
 
@@ -95,7 +95,7 @@ public class FilmController {
     public List<Long> deleteLike(@PathVariable(name = "id") Long id, @PathVariable(name = "userId") Long userId)
             throws DataNotFoundException {
         List<Long> filmLikes = filmService.deleteLike(id, userId);
-        log.info(String.format("User with id %s deleted like from the film with id %s: {}", userId, id), filmLikes);
+        log.info("User with id {} deleted like from the film with id {}: {}", userId, id, filmLikes);
         return filmLikes;
     }
 

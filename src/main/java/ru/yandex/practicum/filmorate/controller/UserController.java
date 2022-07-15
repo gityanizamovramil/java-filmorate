@@ -49,7 +49,7 @@ public class UserController {
     @GetMapping("/users/{id}")
     public User getById(@PathVariable(name = "id") Long id) throws DataNotFoundException {
         User user = userService.getById(id);
-        log.info(String.format("Film with id %s is returned: {}", id), user);
+        log.info("Film with id {} is returned: {}", id, user);
         return user;
     }
 
@@ -57,7 +57,7 @@ public class UserController {
     public List<Long> addFriend(@PathVariable(name = "id") Long id, @PathVariable(name = "friendId") Long friendId)
             throws DataNotFoundException {
         List<Long> friends = userService.addFriend(id, friendId);
-        log.info(String.format("Friend with friendId %s was added to user with id %s: {}", friendId, id), friends);
+        log.info("Friend with friendId {} was added to user with id {}: {}", friendId, id, friends);
         return friends;
     }
 
@@ -65,14 +65,14 @@ public class UserController {
     public List<Long> deleteFriend(@PathVariable(name = "id") Long id, @PathVariable(name = "friendId") Long friendId)
             throws DataNotFoundException {
         List<Long> friends = userService.deleteFriend(id, friendId);
-        log.info(String.format("Friend with friendId %s was deleted from user with id %s: {}", friendId, id), friends);
+        log.info("Friend with friendId {} was deleted from user with id {}: {}", friendId, id, friends);
         return friends;
     }
 
     @GetMapping("/users/{id}/friends")
     public List<User> getFriends(@PathVariable(name = "id") Long id) throws DataNotFoundException {
         List<User> users = userService.getFriends(id);
-        log.info(String.format("Friends of user with id %s are returned: {}", id), users);
+        log.info("Friends of user with id {} are returned: {}", id, users);
         return users;
     }
 
@@ -81,7 +81,7 @@ public class UserController {
             @PathVariable(name = "id") Long id,
             @PathVariable(name = "otherId") Long otherId) throws DataNotFoundException {
         List<User> users = userService.getCommonFriends(id, otherId);
-        log.info(String.format("Common friends of users with ids %s and %s are returned: {}", id, otherId), users);
+        log.info("Common friends of users with ids {} and {} are returned: {}", id, otherId, users);
         return users;
     }
 

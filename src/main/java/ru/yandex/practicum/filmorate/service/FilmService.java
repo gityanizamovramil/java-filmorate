@@ -39,7 +39,7 @@ public class FilmService {
     }
 
     public MPA findRatingById(Integer id) throws DataNotFoundException {
-        return filmStorage.getMpaByid(id);
+        return filmStorage.getMpaById(id);
     }
 
     public Film create(Film film) throws ValidationException, DataNotFoundException {

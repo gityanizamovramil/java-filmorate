@@ -1,7 +1,7 @@
 # java-filmorate
 Template repository for Filmorate project.
 
-![Database schema located in repository by below address:](./src/main/resources/PUBLIC.png)
+![Database schema located in repository by below address:](./src/main/resources/PUBLIC1.png)
 
 <b>Contents of database are the following:</b>
 _____
@@ -39,16 +39,16 @@ _____
 - rating_id PK int
 - rating_name varchar
 
-6 - categories -- SELECT * FROM categories
+6 - genres -- SELECT * FROM genres
 -----
-- category_id PK int
-- category_name varchar
+- genre_id PK int
+- genre_name varchar
 
-7 - films_categories -- SELECT * FROM films_categories
+7 - films_genres -- SELECT * FROM films_genres
 -----
-- film_category_id PK bigint
+- film_genre_id PK bigint
 - film_id PK bigint FK >- films.film_id
-- category_id int FK >- categories.category_id
+- genre_id int FK >- genres.genre_id
 
 
 

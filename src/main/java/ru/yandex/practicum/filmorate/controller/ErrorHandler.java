@@ -23,13 +23,10 @@ public class ErrorHandler {
         return new ErrorResponse("error", e.getMessage());
     }
 
-    /*
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleError(Throwable e) {
         return new ErrorResponse("error", "something go wrong");
     }
-
-     */
 
 }

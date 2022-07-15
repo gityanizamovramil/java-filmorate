@@ -95,9 +95,9 @@ public class UserDBStorage implements UserStorage {
     @Override
     public User getById(Long id) throws DataNotFoundException {
         //Валидация user exist
-        String sqlUserIdList = "SELECT USER_ID FROM USERS";
+        String sqlUserIdList = "SELECT USER_ID FROM USERS WHERE USER_ID = ?";
         List<Long> userIdList = jdbcTemplate.query(
-                sqlUserIdList, (rs, rowNum) -> rs.getLong("USER_ID"));
+                sqlUserIdList, (rs, rowNum) -> rs.getLong("USER_ID"), id);
         UserValidator.validateExist(userIdList, id);
 
         //Возврат user

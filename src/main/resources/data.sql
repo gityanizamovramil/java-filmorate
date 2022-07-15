@@ -5,7 +5,7 @@ MERGE INTO RATINGS
            (4, 'R'),
            (5, 'NC-17');
 
-MERGE INTO CATEGORIES
+MERGE INTO GENRES
     VALUES (1, 'Комедия'),
            (2, 'Драма'),
            (3, 'Мультфильм'),
