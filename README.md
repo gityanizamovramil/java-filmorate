@@ -1,5 +1,6 @@
 # java-filmorate
 Template repository for Filmorate project.
+Branched from main to develop as HEAD.
 
 ![Database schema located in repository by below address:](./src/main/resources/PUBLIC1.png)
 
